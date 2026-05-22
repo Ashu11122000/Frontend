@@ -1,126 +1,5 @@
 import { useState } from 'react';
-import styled from 'styled-components';
-
-const AuthContainer = styled.div`
-  padding: 2rem;
-  max-width: 30rem;
-  margin: 3rem auto;
-  background: #1f1f1f;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-
-  h2 {
-    color: white;
-    text-align: center;
-    margin-bottom: 1.5rem;
-  }
-
-  @media (max-width: 768px) {
-    margin: 2rem 1rem;
-    padding: 1.5rem;
-  }
-`;
-
-const Controls = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-
-  p {
-    margin: 0;
-  }
-
-  label {
-    display: block;
-    color: white;
-    margin-bottom: 0.5rem;
-    font-size: 0.95rem;
-    font-weight: 500;
-  }
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 0.85rem;
-  border: 1px solid ${({ invalid }) => (invalid ? '#ef4444' : '#ccc')};
-  border-radius: 8px;
-  font-size: 1rem;
-  background-color: ${({ invalid }) => (invalid ? '#ffe6e6' : '#ffffff')};
-  transition: all 0.3s ease;
-  box-sizing: border-box;
-
-  &::placeholder {
-    color: #9ca3af;
-  }
-
-  &:focus {
-    outline: none;
-    border-color: #8b5cf6;
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
-  }
-
-  &:hover {
-    border-color: #8b5cf6;
-  }
-
-  @media (max-width: 768px) {
-    padding: 0.75rem;
-    font-size: 0.95rem;
-  }
-`;
-
-const Actions = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1.5rem;
-
-  @media (max-width: 480px) {
-    flex-direction: column;
-  }
-`;
-
-const TextButton = styled.button`
-  background: transparent;
-  border: none;
-  color: white;
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: color 0.3s ease;
-
-  &:hover {
-    color: #c4b5fd;
-  }
-
-  &:active {
-    transform: scale(0.98);
-  }
-`;
-
-const Button = styled.button`
-  background: #8b5cf6;
-  color: white;
-  border: none;
-  padding: 0.85rem 1.5rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background: #7c3aed;
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-
-  &:disabled {
-    background: #6b7280;
-    cursor: not-allowed;
-  }
-`;
+import Input from './Input.jsx';
 
 export default function AuthInputs() {
   const [enteredEmail, setEnteredEmail] = useState('');
@@ -143,41 +22,48 @@ export default function AuthInputs() {
   const passwordNotValid = submitted && enteredPassword.trim().length < 6;
 
   return (
-    <AuthContainer>
-      <h2>Login</h2>
+    <div className="max-w-xl mx-auto mt-12 bg-zinc-900 p-8 rounded-xl shadow-2xl md:mx-4 md:p-6">
+      <h2 className="text-white text-center text-3xl font-semibold mb-6">
+        Login
+      </h2>
 
-      <Controls>
-        <p>
-          <label htmlFor="email">Email</label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="Enter your email"
-            invalid={emailNotValid}
-            value={enteredEmail}
-            onChange={(event) => handleInputChange('email', event.target.value)}
-          />
-        </p>
+      <div className="flex flex-col gap-4">
+        <Input
+          label="Email"
+          type="email"
+          placeholder="Enter your email"
+          value={enteredEmail}
+          invalid={emailNotValid}
+          onChange={(event) => handleInputChange('email', event.target.value)}
+        />
 
-        <p>
-          <label htmlFor="password">Password</label>
-          <Input
-            id="password"
-            type="password"
-            placeholder="Enter your password"
-            invalid={passwordNotValid}
-            value={enteredPassword}
-            onChange={(event) =>
-              handleInputChange('password', event.target.value)
-            }
-          />
-        </p>
-      </Controls>
+        <Input
+          label="Password"
+          type="password"
+          placeholder="Enter your password"
+          value={enteredPassword}
+          invalid={passwordNotValid}
+          onChange={(event) =>
+            handleInputChange('password', event.target.value)
+          }
+        />
+      </div>
 
-      <Actions>
-        <TextButton type="button">Create a new account</TextButton>
-        <Button onClick={handleLogin}>Sign In</Button>
-      </Actions>
-    </AuthContainer>
+      <div className="flex justify-end gap-4 mt-6 max-sm:flex-col">
+        <button
+          type="button"
+          className="bg-transparent border-none text-white text-sm cursor-pointer transition-colors duration-300 hover:text-purple-300 active:scale-95"
+        >
+          Create a new account
+        </button>
+
+        <button
+          onClick={handleLogin}
+          className="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:bg-purple-700 hover:-translate-y-1 active:translate-y-0"
+        >
+          Sign In
+        </button>
+      </div>
+    </div>
   );
 }
