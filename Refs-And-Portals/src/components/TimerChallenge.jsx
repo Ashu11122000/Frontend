@@ -7,23 +7,37 @@ export default function TimerChallenge({ title, targetTime }) {
 
     const [timerStarted, setTimerStarted] = useState(false);
     const [playerWon, setPlayerWon] = useState(false);
+    const [remainingTime, setRemainingTime] = useState(targetTime * 1000);
 
     function handleStart() {
         setPlayerWon(false);
         setTimerStarted(true);
+        setRemainingTime(targetTime * 1000);
+
+        const startTime = Date.now();
 
         timer.current = setTimeout(() => {
-            dialog.current.open();
-            setTimerStarted(false);
             setPlayerWon(false);
+            setTimerStarted(false);
+            setRemainingTime(0);
+            dialog.current.open();
         }, targetTime * 1000);
+
+        timer.current.interval = setInterval(() => {
+            const elapsedTime = Date.now() - startTime;
+            const timeLeft = targetTime * 1000 - elapsedTime;
+
+            setRemainingTime(timeLeft > 0 ? timeLeft : 0);
+        }, 10);
     }
 
     function handleStop() {
         clearTimeout(timer.current);
-        dialog.current.open();
+        clearInterval(timer.current.interval);
+
         setTimerStarted(false);
         setPlayerWon(true);
+        dialog.current.open();
     }
 
     return (
@@ -31,6 +45,7 @@ export default function TimerChallenge({ title, targetTime }) {
             <ResultModal
                 ref={dialog}
                 targetTime={targetTime}
+                remainingTime={remainingTime}
                 result={playerWon ? "won" : "lost"}
             />
 
