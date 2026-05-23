@@ -10,29 +10,32 @@ export default function TimerChallenge({ title, targetTime }) {
     const [remainingTime, setRemainingTime] = useState(targetTime * 1000);
 
     function handleStart() {
-        setPlayerWon(false);
         setTimerStarted(true);
+        setPlayerWon(false);
         setRemainingTime(targetTime * 1000);
 
         const startTime = Date.now();
 
-        timer.current = setTimeout(() => {
-            setPlayerWon(false);
-            setTimerStarted(false);
-            setRemainingTime(0);
-            dialog.current.open();
-        }, targetTime * 1000);
+        timer.current = {
+            timeout: setTimeout(() => {
+                setRemainingTime(0);
+                setTimerStarted(false);
+                setPlayerWon(false);
+                dialog.current.open();
+                clearInterval(timer.current.interval);
+            }, targetTime * 1000),
 
-        timer.current.interval = setInterval(() => {
-            const elapsedTime = Date.now() - startTime;
-            const timeLeft = targetTime * 1000 - elapsedTime;
+            interval: setInterval(() => {
+                const elapsedTime = Date.now() - startTime;
+                const timeLeft = targetTime * 1000 - elapsedTime;
 
-            setRemainingTime(timeLeft > 0 ? timeLeft : 0);
-        }, 10);
+                setRemainingTime(timeLeft > 0 ? timeLeft : 0);
+            }, 10),
+        };
     }
 
     function handleStop() {
-        clearTimeout(timer.current);
+        clearTimeout(timer.current.timeout);
         clearInterval(timer.current.interval);
 
         setTimerStarted(false);
