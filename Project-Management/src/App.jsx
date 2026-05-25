@@ -8,7 +8,34 @@ function App() {
   const [projectsState, setProjectsState] = useState({
     selectedProjectId: undefined,
     projects: [],
+    tasks: [],
   });
+
+  function handleAddTask(text) {
+    setProjectsState((prevState) => {
+      const taskId = Math.random();
+
+      const newTask = {
+        id: taskId,
+        text,
+        projectId: prevState.selectedProjectId,
+      };
+
+      return {
+        ...prevState,
+        tasks: [newTask, ...prevState.tasks],
+      };
+    });
+  }
+
+  function handleDeleteTask(id) {
+    setProjectsState((prevState) => {
+      return {
+        ...prevState,
+        tasks: prevState.tasks.filter((task) => task.id !== id),
+      };
+    });
+  }
 
   function handleStartAddProject() {
     setProjectsState((prevState) => {
@@ -62,6 +89,9 @@ function App() {
         projects: prevState.projects.filter(
           (project) => project.id !== prevState.selectedProjectId
         ),
+        tasks: prevState.tasks.filter(
+          (task) => task.projectId !== prevState.selectedProjectId
+        ),
       };
     });
   }
@@ -70,10 +100,17 @@ function App() {
     (project) => project.id === projectsState.selectedProjectId
   );
 
+  const selectedProjectTasks = projectsState.tasks.filter(
+    (task) => task.projectId === projectsState.selectedProjectId
+  );
+
   let content = (
     <SelectedProject
       project={selectedProject}
       onDelete={handleDeleteProject}
+      onAddTask={handleAddTask}
+      onDeleteTask={handleDeleteTask}
+      tasks={selectedProjectTasks}
     />
   );
 
