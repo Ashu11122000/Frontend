@@ -4,55 +4,59 @@ import { CartContext } from "../store/shopping-cart-context.jsx";
 export default function Cart({ onUpdateItemQuantity }) {
   const { items } = useContext(CartContext);
 
-  const totalPrice = items.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
-
-  const formattedTotalPrice = `$${totalPrice.toFixed(2)}`;
-
   return (
     <CartContext.Consumer>
-      <div id="cart">
-        {items.length === 0 && <p>No items in cart!</p>}
+      {(cartCtx) => {
+        const totalPrice = items.reduce(
+          (acc, item) => acc + item.price * item.quantity,
+            0
+        );
 
-        {items.length > 0 && (
-          <ul id="cart-items">
-            {items.map((item) => {
-              const formattedPrice = `$${item.price.toFixed(2)}`;
+        const formattedTotalPrice = `$${totalPrice.toFixed(2)}`;
+        
+        return(
+          <div id="cart">
+            {items.length === 0 && <p>No items in cart!</p>}
 
-              return (
-                <li key={item.id}>
-                  <div>
-                    <span>{item.name}</span>
-                    <span> ({formattedPrice})</span>
-                  </div>
+            {items.length > 0 && (
+              <ul id="cart-items">
+                {items.map((item) => {
+                  const formattedPrice = `$${item.price.toFixed(2)}`;
 
-                  <div className="cart-item-actions">
-                    <button
-                      onClick={() => onUpdateItemQuantity(item.id, -1)}
-                    >
-                      -
-                    </button>
+                  return (
+                    <li key={item.id}>
+                    <div>
+                      <span>{item.name}</span>
+                      <span> ({formattedPrice})</span>
+                    </div>
 
-                    <span>{item.quantity}</span>
+                    <div className="cart-item-actions">
+                      <button
+                        onClick={() => onUpdateItemQuantity(item.id, -1)}
+                      >
+                        -
+                      </button>
 
-                    <button
-                      onClick={() => onUpdateItemQuantity(item.id, 1)}
-                    >
-                      +
-                    </button>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        )}
+                      <span>{item.quantity}</span>
 
-        <p id="cart-total-price">
-          Cart Total: <strong>{formattedTotalPrice}</strong>
-        </p>
-      </div>
+                      <button
+                        onClick={() => onUpdateItemQuantity(item.id, 1)}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+
+          <p id="cart-total-price">
+            Cart Total: <strong>{formattedTotalPrice}</strong>
+          </p>
+        </div>
+        );
+      }}
     </CartContext.Consumer>
   );
 }
