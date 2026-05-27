@@ -1,18 +1,15 @@
 import { useState } from "react";
-import QUESTIONS from '../questions.js';
-import quizCompleteImg from '../assets/quiz-complete.png';
+import QUESTIONS from "../questions.js";
+import quizCompleteImg from "../assets/quiz-complete.png";
+import QuestionTimer from "./QuestionTimer.jsx";
 
 export default function Quiz() {
-
-    // const[activeQuestionIndex, setActiveQuestionIndex] = useState(0);
-
     const [userAnswers, setUserAnswers] = useState([]);
 
     const activeQuestionIndex = userAnswers.length;
+    const quizIsComplete = activeQuestionIndex >= QUESTIONS.length;
 
-    const quizIsComplete = activeQuestionIndex === QUESTIONS.length;
-
-    if(quizIsComplete) {
+    if (quizIsComplete) {
         return (
             <div id="summary">
                 <img src={quizCompleteImg} alt="Trophy Icon" />
@@ -26,16 +23,20 @@ export default function Quiz() {
 
     function handleSelectAnswer(selectedAnswer) {
         setUserAnswers((prevUserAnswers) => {
-            return[...prevUserAnswers, selectedAnswer];
+            return [...prevUserAnswers, selectedAnswer];
         });
     }
 
     return (
         <div id="quiz">
             <div id="question">
-                <h2>
-                    {QUESTIONS[activeQuestionIndex].text}
-                </h2>
+                <QuestionTimer
+                    timeout={10000}
+                    onTimeout={() => handleSelectAnswer(null)}
+                />
+
+                <h2>{QUESTIONS[activeQuestionIndex].text}</h2>
+
                 <ul id="answers">
                     {shuffledAnswers.map((answer) => (
                         <li key={answer} className="answer">
