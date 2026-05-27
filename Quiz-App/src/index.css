@@ -53,6 +53,8 @@ header h1 {
   -webkit-text-fill-color: transparent;
 }
 
+
+
 #last-try {
   max-width: 40rem;
   margin: 2rem auto;
@@ -294,11 +296,15 @@ header h1 {
 
 #summary-stats {
   display: flex;
-  gap: 3rem;
-  width: 60%;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2.5rem;
+  width: 100%;
+  max-width: 900px;
   margin: 2rem auto;
   padding-bottom: 2rem;
   border-bottom: 2px solid #594276;
+  flex-wrap: wrap;
 }
 
 #summary-stats p {
